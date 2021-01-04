@@ -45,8 +45,10 @@ from .util import (
     all_fields_empty,
     get_first,
     has_any_field,
-    save_note,
+    save_note, set_all,
+    cleanup
 )
+from re import search
 
 PROMPT_TEMPLATE = (
     '<div>This will update the {field_names} fields in the current deck.</div>'
@@ -524,6 +526,88 @@ def bulk_fill_usage():
             'Usages may not be available in the database\'s data set. '
             'Custom data can be added to the english_usage column in the'
             'chinese.db database.\n'
+            'The following notes failed: \n\n'
+            + ', '.join(failed_hanzi)
+        )
+        showText(failed_msg, copyBtn=True)
+    mw.progress.finish()
+    showInfo(msg)
+
+
+def bulk_fill_words():
+    prompt = PROMPT_TEMPLATE.format(
+        field_names='<i>words</i>', extra_info=''
+    )
+
+    if not askUser(prompt):
+        return
+
+    d_has_fields = 0
+    n_updated = 0
+    n_failed = 0
+    n_notfilled = 0
+    max_words = 10
+    max_word_length = 4
+    failed_hanzi = []
+    chineseRegexSet = "\u3400-\u4BDF\u4E00-\u9FFF\uF900-\uFAFF\U00020000-\U0002A6DF\U0002A700-\U0002B73F\U0002B740-\U0002B81F\U0002B820-\U0002CEAF\U0002F800-\U0002FA1F"
+
+    note_ids = Finder(mw.col).findNotes('deck:current -Deck:Mandarin::Fundamentals -tag:fp -tag:gr')
+    mw.progress.start(immediate=True, min=0, max=len(note_ids))
+
+    for i, nid in enumerate(note_ids):
+        try:
+            note = mw.col.getNote(nid)
+            copy = dict(note)
+            if has_any_field(config['fields']['words'], copy):
+                d_has_fields += 1
+                msg = '''
+                <b>Processing:</b> %(hanzi)s<br>
+                <b>Updated:</b> %(filled)d
+                <b>Not Filled:</b> %(not_filled)d''' % {
+                    'hanzi': get_hanzi(copy),
+                    'filled': n_updated,
+                    'not_filled': n_notfilled
+                }
+                mw.progress.update(label=msg, value=i)
+                hanzi = cleanup(get_first(config['fields']['hanzi'], copy))
+                containsNonChineseCharacters = search("[^" + chineseRegexSet + "]", hanzi)
+                if containsNonChineseCharacters:
+                    continue
+                words = get_first(config['fields']['words'], copy)
+                words = words.split("\n<br>") if words else []
+
+                foundNested = False
+                for j, nested_nid in enumerate(note_ids):
+                    nested_note = mw.col.getNote(nested_nid)
+                    nested_copy = dict(nested_note)
+                    nested_hanzi = cleanup(get_first(config['fields']['hanzi'], nested_copy))
+                    containsNonChineseCharacters = search("[^" + chineseRegexSet + "]", nested_hanzi)
+                    if containsNonChineseCharacters:
+                        continue
+                    if hanzi != nested_hanzi and len(nested_hanzi) <= max_word_length and len(words) < max_words and hanzi in nested_hanzi and nested_hanzi not in words:
+                        foundNested = True
+                        words.append(cleanup(nested_hanzi))
+
+                if foundNested:
+                    wordsFieldUpdate = "\n<br>".join(sorted(words[:max_words], key=len))
+                    set_all(config['fields']['words'], copy, to=wordsFieldUpdate)
+                    n_updated += save_note(note, copy)
+                else:
+                    n_notfilled +=1
+
+        except Exception as e:
+            failed_hanzi.append(get_first(config['fields']['hanzi'], dict(mw.col.getNote(nid))))
+            n_failed += 1
+
+    msg = '''
+    <b>Update complete!</b><br>
+    <b>Updated:</b> %(filled)d notes
+    <b>Not Filled:</b> %(not_filled)d''' % {
+        'filled': n_updated,
+        'not_filled': n_notfilled
+    }
+    if n_failed > 0:
+        failed_msg = (
             'The following notes failed: \n\n'
             + ', '.join(failed_hanzi)
         )

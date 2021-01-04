@@ -35,6 +35,7 @@ from .fill import (
     bulk_fill_sound,
     bulk_fill_transcript,
     bulk_fill_usage,
+    bulk_fill_words,
 )
 from .main import config
 
@@ -84,6 +85,7 @@ def load_menu():
     add_menu_item('Chinese::Bulk Fill', _('Sound'), bulk_fill_sound)
     add_menu_item('Chinese::Bulk Fill', _('Silhouette'), bulk_fill_silhouette)
     add_menu_item('Chinese::Bulk Fill', _('Usage'), bulk_fill_usage)
+    add_menu_item('Chinese::Bulk Fill', _('Word Relations'), bulk_fill_words)
     add_menu_item('Chinese::Bulk Fill', _('All'), bulk_fill_all)
 
     add_menu('Chinese::Help')
