@@ -570,6 +570,7 @@ def bulk_fill_words():
                 }
                 mw.progress.update(label=msg, value=i)
                 hanzi = cleanup(get_first(config['fields']['hanzi'], copy))
+
                 containsNonChineseCharacters = search("[^" + chineseRegexSet + "]", hanzi)
                 if containsNonChineseCharacters:
                     continue
@@ -586,10 +587,10 @@ def bulk_fill_words():
                         continue
                     if hanzi != nested_hanzi and len(nested_hanzi) <= max_word_length and len(words) < max_words and hanzi in nested_hanzi and nested_hanzi not in words:
                         foundNested = True
-                        words.append(cleanup(nested_hanzi))
+                        words.append(nested_hanzi)
 
                 if foundNested:
-                    wordsFieldUpdate = "\n<br>".join(sorted(words[:max_words], key=len))
+                    wordsFieldUpdate = "<br>".join(sorted(words[:max_words], key=len))
                     set_all(config['fields']['words'], copy, to=wordsFieldUpdate)
                     n_updated += save_note(note, copy)
                 else:

@@ -117,14 +117,14 @@ def fill_usage(hanzi, note):
         if sentences:
             numberOfSentences = config.get_config_scalar_value("max_examples")
             if numberOfSentences == -1:
-                sentenceList = [sentence.replace('\n', '\n<br>')
+                sentenceList = [sentence.replace('\n', '<br>')
                                 for sentence in
                                 sentences[0].split('\n\n')]
             else:
-                sentenceList = [sentence.replace('\n', '\n<br>')
+                sentenceList = [sentence.replace('\n', '<br>')
                                 for sentence in
                                 sentences[0].split('\n\n')[:numberOfSentences]]
-            sentences = str.join('\n<br>\n<br>', sentenceList)
+            sentences = str.join('<br><br>', sentenceList)
             set_all(config['fields']['usage'], note, to=sentences)
             filled = True
 
