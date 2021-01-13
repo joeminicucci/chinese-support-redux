@@ -126,6 +126,7 @@ JYUTPING_REGEX = TRANSCRIPT_REGEX_TEMPLATE.format(
 )
 
 COLOR_TEMPLATE = '<span class="tone{tone}">{chars}</span>'
+PINYIN_COLOR_TEMPLATE = '<span class="tone{tone}">{chars}</span> '
 
 COLOR_RUBY_TEMPLATE = ruby_template = (
     '<span class="tone{tone}">'

@@ -22,6 +22,7 @@ from .consts import (
     BOPOMOFO_REGEX,
     COLOR_RUBY_TEMPLATE,
     COLOR_TEMPLATE,
+    PINYIN_COLOR_TEMPLATE,
     HALF_RUBY_REGEX,
     HANZI_RANGE,
     JYUTPING_REGEX,
@@ -40,6 +41,11 @@ def colorize(words, target='pinyin', ruby_whole=False):
     assert isinstance(words, list)
 
     def _repl(p):
+        return PINYIN_COLOR_TEMPLATE.format(
+            tone=tone_number(p.group(1)), chars=p.group()
+        )
+
+    def _rubyRepl(p):
         return COLOR_TEMPLATE.format(
             tone=tone_number(p.group(1)), chars=p.group()
         )
@@ -67,13 +73,13 @@ def colorize(words, target='pinyin', ruby_whole=False):
                         pattern = RUBY_REGEX
                     else:
                         pattern = HALF_RUBY_REGEX
-                    text += sub(pattern, _repl, syllable, IGNORECASE)
+                    text += sub(pattern, _rubyRepl, syllable, IGNORECASE)
                 else:
-                    text += f'<span class="tone5">{syllable}</span>'
+                    text += f'<span class="tone5">{syllable}</span> '
         else:
             raise NotImplementedError(target)
 
-        done.append(text + sound_tags)
+        done.append(text.rstrip(' ') + sound_tags)
 
     return ' '.join(done)
 

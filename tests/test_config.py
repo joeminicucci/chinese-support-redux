@@ -61,6 +61,7 @@ class Config(Base):
             'Traditional',
             'Traditional (Color)',
             "Usage",
+            "Words",
             'Zhuyin',
             'le français',
             'ㄅㄆㄇㄈ',

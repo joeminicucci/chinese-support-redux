@@ -37,7 +37,7 @@ class FormatPinyin(Base):
     def test_issue_78(self):
         note = {'Hanzi': '壮观', 'Pinyin': 'zhuàngguān'}
         expected = (
-            '<span class="tone4">zhuàng</span>'
+            '<span class="tone4">zhuàng</span> '
             '<span class="tone1">guān</span> '
             '<!-- zhuang guan -->'
         )
@@ -71,18 +71,18 @@ class FillSound(Base):
 
 class FillTranscript(Base):
     expected_pinyin = (
-        '<span class="tone2">méi</span>'
+        '<span class="tone2">méi</span> '
         '<span class="tone3">yǒu</span> '
         '<span class="tone5">,</span> '
         '<span class="tone4">shì</span> '
         '<span class="tone3">wǒ</span> '
-        '<span class="tone4">dì</span>'
-        '<span class="tone1">yī</span>'
+        '<span class="tone4">dì</span> '
+        '<span class="tone1">yī</span> '
         '<span class="tone4">cì</span> '
         '<span class="tone2">lái</span> '
-        '<span class="tone4">shàng</span>'
+        '<span class="tone4">shàng</span> '
         '<span class="tone3">hǎi</span> '
-        '<span class="tone3">lǚ</span>'
+        '<span class="tone3">lǚ</span> '
         '<span class="tone2">yóu</span> '
         '<span class="tone5">.</span> '
         '<!-- mei you , shi wo di yi ci lai shang hai lü you . -->'
@@ -123,7 +123,7 @@ class FillTranscript(Base):
         self.assertEqual(
             note['Bopomofo'],
             (
-                '<span class="tone4">ㄕㄤˋ</span>'
+                '<span class="tone4">ㄕㄤˋ</span> '
                 '<span class="tone3">ㄏㄞˇ</span> '
                 '<span class="tone2">ㄖㄣˊ</span> '
                 '<!-- ㄕㄤˋㄏㄞˇㄖㄣˊ -->'
@@ -133,13 +133,13 @@ class FillTranscript(Base):
         # and 人. Once the database is better populated, it will pass.
         self.assertNotEqual(
             note['Cantonese'],
-            '<span class="tone6">soeng6</span>'
+            '<span class="tone6">soeng6</span> '
             '<span class="tone2">hoi2</span> '
             '<span class="tone4">jan4</span> '
             '<!-- soeng hoi jan -->',
         )
         pinyin = (
-            '<span class="tone4">shàng</span>'
+            '<span class="tone4">shàng</span> '
             '<span class="tone3">hǎi</span> '
             '<span class="tone2">rén</span> '
             '<!-- shang hai ren -->'
@@ -163,7 +163,7 @@ class FillTranscript(Base):
         fill_transcript('分享', note)
         self.assertEqual(
             note['Pinyin'],
-            '<span class="tone1">fēn</span>'
+            '<span class="tone1">fēn</span> '
             '<span class="tone3">xiǎng</span> '
             '<!-- fen xiang -->',
         )
@@ -171,12 +171,12 @@ class FillTranscript(Base):
     def test_issue_78(self):
         note = {'Hanzi': '壮观', 'Pinyin': '', 'Bopomofo': ''}
         expected_pinyin = (
-            '<span class="tone4">zhuàng</span>'
+            '<span class="tone4">zhuàng</span> '
             '<span class="tone1">guān</span> '
             '<!-- zhuang guan -->'
         )
         expected_bopomofo = (
-            '<span class="tone4">ㄓㄨㄤˋ</span>'
+            '<span class="tone4">ㄓㄨㄤˋ</span> '
             '<span class="tone1">ㄍㄨㄢ</span> '
             '<!-- ㄓㄨㄤˋㄍㄨㄢ -->'
         )
@@ -194,17 +194,17 @@ class FillTranscript(Base):
         fill_transcript('不言而喻', note)
         self.assertEqual(
             note['Pinyin'],
-            '<span class="tone4">bù</span>'
-            '<span class="tone2">yán</span>'
-            '<span class="tone2">ér</span>'
+            '<span class="tone4">bù</span> '
+            '<span class="tone2">yán</span> '
+            '<span class="tone2">ér</span> '
             '<span class="tone4">yù</span> '
             '<!-- bu yan er yu -->',
         )
         self.assertEqual(
             note['Bopomofo'],
-            '<span class="tone4">ㄅㄨˋ</span>'
-            '<span class="tone2">ㄧㄢˊ</span>'
-            '<span class="tone2">ㄦˊ</span>'
+            '<span class="tone4">ㄅㄨˋ</span> '
+            '<span class="tone2">ㄧㄢˊ</span> '
+            '<span class="tone2">ㄦˊ</span> '
             '<span class="tone4">ㄩˋ</span> '
             '<!-- ㄅㄨˋㄧㄢˊㄦˊㄩˋ -->',
         )
@@ -287,9 +287,9 @@ class UpdateFields(Base):
                 '<span class="tone1">张</span>, '
                 '<span class="tone2"><ruby>床<rt>chuáng</rt></ruby></span>'
             ),
-            'Pinyin': '<span class="tone2">chuáng</span><span class="tone1">dān</span> <!-- chuang dan -->',
-            'Pinyin (Taiwan)': '<span class="tone2">chuáng</span><span class="tone1">dān</span> <!-- chuang dan -->',
-            'Bopomofo': '<span class="tone2">ㄔㄨㄤˊ</span><span class="tone1">ㄉㄢ</span> <!-- ㄔㄨㄤˊㄉㄢ -->',
+            'Pinyin': '<span class="tone2">chuáng</span> <span class="tone1">dān</span> <!-- chuang dan -->',
+            'Pinyin (Taiwan)': '<span class="tone2">chuáng</span> <span class="tone1">dān</span> <!-- chuang dan -->',
+            'Bopomofo': '<span class="tone2">ㄔㄨㄤˊ</span> <span class="tone1">ㄉㄢ</span> <!-- ㄔㄨㄤˊㄉㄢ -->',
             'Jyutping': '',
             # FIXME
             'English': ' \tbed sheet\n<br>',

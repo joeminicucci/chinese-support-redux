@@ -28,7 +28,7 @@ class TestColorize(Base):
     def test_joined_syllables(self):
         self.assertEqual(
             colorize(['xiàn zài']),
-            '<span class="tone4">xiàn</span><span class="tone4">zài</span>',
+            '<span class="tone4">xiàn</span> <span class="tone4">zài</span>',
         )
 
     def test_separate_syllables(self):
@@ -59,14 +59,14 @@ class TestColorize(Base):
     def test_mixed_english_chinese(self):
         self.assertEqual(
             colorize(['Brian de']),
-            '<span class="tone5">Brian</span><span class="tone5">de</span>',
+            '<span class="tone5">Brian</span> <span class="tone5">de</span>',
         )
 
     def test_cantonese(self):
         self.assertEqual(
             colorize(['soeng6 hoi2 jan4'], 'jyutping'),
-            '<span class="tone6">soeng6</span>'
-            '<span class="tone2">hoi2</span>'
+            '<span class="tone6">soeng6</span> '
+            '<span class="tone2">hoi2</span> '
             '<span class="tone4">jan4</span>',
         )
 
